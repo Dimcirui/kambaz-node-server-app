@@ -46,64 +46,30 @@ export default function UserRoutes(app, db) {
     res.json(currentUser);
   };
 
-  // const signin = async (req, res) => {
-  //   const { username, password } = req.body;
-  //   const currentUser = dao.findUserByCredentials(username, password);
-  //   if (currentUser) {
-  //     req.session["currentUser"] = currentUser;
-  //     res.json(currentUser);
-  //   } else {
-  //     res.status(401).json({ message: "Unable to login. Try again later." });
-  //   }
-  // };
-const signin = async (req, res) => {
-  const { username, password } = req.body;
-  console.log("=== Sign In Request ===");
-  console.log("Username:", username);
-  
-  const currentUser = dao.findUserByCredentials(username, password);
-  if (currentUser) {
-    console.log("✅ User found:", currentUser);
-    req.session["currentUser"] = currentUser;
-    console.log("Session after setting:", req.session);
-    console.log("Session ID:", req.sessionID);
-    res.json(currentUser);
-  } else {
-    console.log("❌ Invalid credentials");
-    res.status(401).json({ message: "Unable to login. Try again later." });
-  }
-  console.log("===================");
-};
+  const signin = async (req, res) => {
+    const { username, password } = req.body;
+    const currentUser = dao.findUserByCredentials(username, password);
+    if (currentUser) {
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } else {
+      res.status(401).json({ message: "Unable to login. Try again later." });
+    }
+  };
 
   const signout = (req, res) => {
     req.session.destroy();
     res.sendStatus(200);
   };
 
-// const profile = async (req, res) => {
-//     const currentUser = req.session["currentUser"];
-//     if (!currentUser) {
-//       res.sendStatus(401);
-//       return;
-//     }
-//     res.json(currentUser);
-//   };
 const profile = async (req, res) => {
-  console.log("=== Profile Request ===");
-  console.log("Session ID:", req.sessionID);
-  console.log("Session object:", req.session);
-  console.log("Current User:", req.session["currentUser"]);
-  console.log("=====================");
-  
-  const currentUser = req.session["currentUser"];
-  if (!currentUser) {
-    console.log("⚠️ No currentUser in session, sending 401");
-    res.sendStatus(401);
-    return;
-  }
-  console.log("✅ Sending user data:", currentUser);
-  res.json(currentUser);
-};
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    res.json(currentUser);
+  };
 
   
   const findUsersInCourse = (req, res) => {
@@ -138,15 +104,15 @@ const profile = async (req, res) => {
 
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
-  app.get("/api/users/:userId", findUserById);
-  app.put("/api/users/:userId", updateUser);
-  app.delete("/api/users/:userId", deleteUser);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
   app.get("/api/users/profile", profile);
+  app.get("/api/users/enrollments", findEnrollmentsForCurrentUser);
+  app.get("/api/users/:userId", findUserById);
+  app.put("/api/users/:userId", updateUser);
+  app.delete("/api/users/:userId", deleteUser);
   app.get("/api/courses/:cid/people", findUsersInCourse);
   app.post("/api/courses/:cid/people", enrollUserInCourse);
   app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
-  app.get("/api/users/enrollments", findEnrollmentsForCurrentUser);
 }
