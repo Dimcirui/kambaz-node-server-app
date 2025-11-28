@@ -3,38 +3,54 @@ import UsersDao from "./dao.js";
 
 export default function UserRoutes(app) {
   const dao = UsersDao();
+  const enrollmentsDao = EnrollmentsDao();
+
   const findAllUsers = async (req, res) => {
+    const { role, name } = req.query;
+    if (role) {
+      const users = await dao.findUsersByRole(role);
+      res.json(users);
+      return;
+    }
     const users = await dao.findAllUsers();
     res.json(users);
+    if (name) {
+        const users = await dao.findUsersByPartialName(name);
+        res.json(users);
+        return;
+      }
   };
-  
-  const enrollmentsDao = EnrollmentsDao();
-  app.get("/api/users", findAllUsers);
-  const createUser = (req, res) => {
-    const user = dao.createUser(req.body);
+
+
+const createUser = async (req, res) => {
+    const user = await dao.createUser(req.body);
     res.json(user);
   };
-  const deleteUser = (req, res) => { 
-    const { userId } = req.params;
-    dao.deleteUser(userId);
-    res.sendStatus(200);
+
+
+  const deleteUser = async (req, res) => {
+      const status = await dao.deleteUser(req.params.userId);
+      res.json(status);
   };
+
   
 
-  const findUserById = (req, res) => { 
-    const { userId } = req.params;
-    const user = dao.findUserById(userId);
+  const findUserById = async (req, res) => {
+    const user = await dao.findUserById(req.params.userId);
     res.json(user);
   };
   
-  const updateUser = (req, res) => {
-    const userId = req.params.userId;
+  const updateUser = async (req, res) => {
+    const { userId } = req.params;
     const userUpdates = req.body;
-    dao.updateUser(userId, userUpdates);
-    const currentUser = dao.findUserById(userId);
-    req.session["currentUser"] = currentUser;
+    await dao.updateUser(userId, userUpdates);
+    const currentUser = req.session["currentUser"];
+   if (currentUser && currentUser._id === userId) {
+     req.session["currentUser"] = { ...currentUser, ...userUpdates };
+   }
     res.json(currentUser);
   };
+
 
 
   const signup = async (req, res) => {
@@ -74,22 +90,22 @@ const profile = async (req, res) => {
   };
 
   
-  const findUsersInCourse = (req, res) => {
+  const findUsersInCourse = async (req, res) => {
     const { cid } = req.params;
-    const users = enrollmentsDao.findUsersEnrolledInCourse(cid);
+    const users = await enrollmentsDao.findUsersEnrolledInCourse(cid);
     res.json(users);
   };
 
-  const enrollUserInCourse = (req, res) => {
+  const enrollUserInCourse = async (req, res) => {
     const { cid } = req.params;
     const { userId } = req.body;
-    enrollmentsDao.enrollUserInCourse(userId, cid);
+    await enrollmentsDao.enrollUserInCourse(userId, cid);
     res.sendStatus(201);
   };
 
-  const unenrollUserFromCourse = (req, res) => {
+  const unenrollUserFromCourse = async (req, res) => {
     const { cid, uid }  = req.params;
-    enrollmentsDao.unenrollUserFromCourse( uid, cid);
+    await enrollmentsDao.unenrollUserFromCourse( uid, cid);
     res.sendStatus(200);
   };
 
@@ -116,4 +132,5 @@ const profile = async (req, res) => {
   app.get("/api/courses/:cid/people", findUsersInCourse);
   app.post("/api/courses/:cid/people", enrollUserInCourse);
   app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
+  app.get("/api/users", findAllUsers);
 }
