@@ -16,6 +16,7 @@ import session from "express-session";
 const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
 const app = express();
+app.set("trust proxy", 1);
 app.use(
   cors({
     credentials: true,
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === "production" || process.env.SERVER_ENV === "product
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
-    // domain: process.env.SERVER_URL,
+    domain: process.env.SERVER_URL,
   };
 }
 app.use(session(sessionOptions));
