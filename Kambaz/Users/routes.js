@@ -1,11 +1,15 @@
 import EnrollmentsDao from "../Enrollments/dao.js";
 import UsersDao from "./dao.js";
-// let currentUser = null;
 
-export default function UserRoutes(app, db) {
- const dao = UsersDao(db);
- const enrollmentsDao = EnrollmentsDao(db);
-
+export default function UserRoutes(app) {
+  const dao = UsersDao();
+  const findAllUsers = async (req, res) => {
+    const users = await dao.findAllUsers();
+    res.json(users);
+  };
+  
+  const enrollmentsDao = EnrollmentsDao();
+  app.get("/api/users", findAllUsers);
   const createUser = (req, res) => {
     const user = dao.createUser(req.body);
     res.json(user);
@@ -15,10 +19,8 @@ export default function UserRoutes(app, db) {
     dao.deleteUser(userId);
     res.sendStatus(200);
   };
-  const findAllUsers = (req, res) => { 
-    const users = dao.findAllUsers();
-    res.json(users);
-  };
+  
+
   const findUserById = (req, res) => { 
     const { userId } = req.params;
     const user = dao.findUserById(userId);
@@ -35,20 +37,20 @@ export default function UserRoutes(app, db) {
   };
 
 
-  const signup = (req, res) => {
-    const user = dao.findUserByUsername(req.body.username);
+  const signup = async (req, res) => {
+    const user = await dao.findUserByUsername(req.body.username);
     if (user) {
       res.status(400).json({ message: "Username already taken" });
       return;
     }
-    const currentUser = dao.createUser(req.body);
+    const currentUser = await dao.createUser(req.body);
     req.session["currentUser"] = currentUser;
     res.json(currentUser);
   };
 
   const signin = async (req, res) => {
     const { username, password } = req.body;
-    const currentUser = dao.findUserByCredentials(username, password);
+    const currentUser = await dao.findUserByCredentials(username, password);
     if (currentUser) {
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
@@ -103,7 +105,6 @@ const profile = async (req, res) => {
 
 
   app.post("/api/users", createUser);
-  app.get("/api/users", findAllUsers);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
