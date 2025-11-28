@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import model from "../Courses/model.js";
 
-export default function ModulesDao(db) {
+export default function ModulesDao() {
 async function updateModule(courseId, moduleId, moduleUpdates) {
    const course = await model.findById(courseId);
    const module = course.modules.id(moduleId);
