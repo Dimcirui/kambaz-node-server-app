@@ -12,13 +12,13 @@ export default function UserRoutes(app) {
       res.json(users);
       return;
     }
-    const users = await dao.findAllUsers();
-    res.json(users);
     if (name) {
         const users = await dao.findUsersByPartialName(name);
         res.json(users);
         return;
       }
+    const users = await dao.findAllUsers();
+    res.json(users);
   };
 
 
@@ -90,47 +90,47 @@ const profile = async (req, res) => {
   };
 
   
-  const findUsersInCourse = async (req, res) => {
-    const { cid } = req.params;
-    const users = await enrollmentsDao.findUsersEnrolledInCourse(cid);
-    res.json(users);
-  };
+  // const findUsersInCourse = async (req, res) => {
+  //   const { cid } = req.params;
+  //   const users = await enrollmentsDao.findUsersEnrolledInCourse(cid);
+  //   res.json(users);
+  // };
 
-  const enrollUserInCourse = async (req, res) => {
-    const { cid } = req.params;
-    const { userId } = req.body;
-    await enrollmentsDao.enrollUserInCourse(userId, cid);
-    res.sendStatus(201);
-  };
+  // const enrollUserInCourse = async (req, res) => {
+  //   const { cid } = req.params;
+  //   const { userId } = req.body;
+  //   await enrollmentsDao.enrollUserInCourse(userId, cid);
+  //   res.sendStatus(201);
+  // };
 
-  const unenrollUserFromCourse = async (req, res) => {
-    const { cid, uid }  = req.params;
-    await enrollmentsDao.unenrollUserFromCourse( uid, cid);
-    res.sendStatus(200);
-  };
+  // const unenrollUserFromCourse = async (req, res) => {
+  //   const { cid, uid }  = req.params;
+  //   await enrollmentsDao.unenrollUserFromCourse( uid, cid);
+  //   res.sendStatus(200);
+  // };
 
-  const findEnrollmentsForCurrentUser = (req, res) => {
+  const findEnrollmentsForCurrentUser = async (req, res) => {
     const currentUser = req.session["currentUser"];
     if (!currentUser) {
       res.sendStatus(401);
       return;
     }
-    const enrollments = enrollmentsDao.findEnrollmentsForUser(currentUser._id);
+    const enrollments = await enrollmentsDao.findEnrollmentsForUser(currentUser._id);
     res.json(enrollments);
   };
 
 
   app.post("/api/users", createUser);
+  app.get("/api/users", findAllUsers);
+  app.get("/api/users/:userId", findUserById);
+  app.put("/api/users/:userId", updateUser);
+  app.delete("/api/users/:userId", deleteUser);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
   app.get("/api/users/profile", profile);
-  app.get("/api/users/enrollments", findEnrollmentsForCurrentUser);
-  app.get("/api/users/:userId", findUserById);
-  app.put("/api/users/:userId", updateUser);
-  app.delete("/api/users/:userId", deleteUser);
-  app.get("/api/courses/:cid/people", findUsersInCourse);
-  app.post("/api/courses/:cid/people", enrollUserInCourse);
-  app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
-  app.get("/api/users", findAllUsers);
+  app.get("/api/users/current/enrollments", findEnrollmentsForCurrentUser);
+  // app.get("/api/courses/:cid/people", findUsersInCourse);
+  // app.post("/api/courses/:cid/people", enrollUserInCourse);
+  // app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
 }
