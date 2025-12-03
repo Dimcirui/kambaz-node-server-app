@@ -1,12 +1,15 @@
 import model from "./model.js";
 import { v4 as uuidv4 } from "uuid";
 
-export default function AssignmentsDao(db) {
+export default function AssignmentsDao() {
     const findAssignmentsForCourse = (courseId) => model.find({ course: courseId });
 
     const createAssignment = (assignment) => {
-        delete assignment._id; 
-        return model.create(assignment);
+        const newAssignment = {
+            ...assignment,
+            _id: uuidv4(),
+        };
+        return model.create(newAssignment);
     };
 
     const deleteAssignment = (assignmentId) => model.deleteOne({ _id: assignmentId });
@@ -15,10 +18,10 @@ export default function AssignmentsDao(db) {
         return model.updateOne({ _id: assignmentId }, { $set: assignmentUpdates });
     };
 
-return {
-    findAssignmentsForCourse,
-    createAssignment,
-    deleteAssignment,
-    updateAssignment
-};
+    return {
+        findAssignmentsForCourse,
+        createAssignment,
+        deleteAssignment,
+        updateAssignment
+    };
 }
