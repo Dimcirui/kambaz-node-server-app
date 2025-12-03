@@ -10,9 +10,21 @@ export default function AssignmentsRoutes(app) {
   };
 
   const createAssignmentForCourse = async (req, res) => {
-    const { cid } = req.params;
-    const newAssignment = await assignmentsDao.createAssignment({ ...req.body, course: cid });
-    res.json(newAssignment);
+    try {
+      const { cid } = req.params;
+
+      console.log("Creating assignment for course:", cid);
+      console.log("Request body:", req.body);
+
+      const newAssignment = await assignmentsDao.createAssignment({ ...req.body, course: cid });
+
+      console.log("Created assignment:", newAssignment);
+
+      res.json(newAssignment);
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+      res.status(500).json({ error: error.message });
+    }
   };
 
   const deleteAssignment = async (req, res) => {
