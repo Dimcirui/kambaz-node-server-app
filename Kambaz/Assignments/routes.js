@@ -1,6 +1,8 @@
 import AssignmentsDao from "./dao.js";
 
 export default function AssignmentsRoutes(app) {
+  console.log("=== AssignmentsRoutes: Starting registration ===");
+
   const assignmentsDao = AssignmentsDao();
 
   const findAssignmentsForCourse = async (req, res) => {
@@ -10,15 +12,14 @@ export default function AssignmentsRoutes(app) {
   };
 
   const createAssignmentForCourse = async (req, res) => {
+    console.log("=== createAssignmentForCourse called ===");
+    console.log("cid:", req.params.cid);
+    console.log("body:", req.body);
     try {
       const { cid } = req.params;
-
-      console.log("Creating assignment for course:", cid);
-      console.log("Request body:", req.body);
-
       const newAssignment = await assignmentsDao.createAssignment({ ...req.body, course: cid });
 
-      console.log("Created assignment:", newAssignment);
+      console.log("Created:", newAssignment);
 
       res.json(newAssignment);
     } catch (error) {
@@ -39,8 +40,10 @@ export default function AssignmentsRoutes(app) {
     res.json(updatedAssignment);
   };
 
+  console.log("=== Registering assignment routes ===");
   app.get("/api/courses/:cid/assignments", findAssignmentsForCourse);
   app.post("/api/courses/:cid/assignments", createAssignmentForCourse);
   app.delete("/api/assignments/:aid", deleteAssignment);
   app.put("/api/assignments/:aid", updateAssignment);
+  console.log("=== AssignmentsRoutes: Registration complete ===");
 }
