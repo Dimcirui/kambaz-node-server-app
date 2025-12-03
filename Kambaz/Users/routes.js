@@ -70,11 +70,11 @@ const createUser = async (req, res) => {
     if (currentUser) {
       req.session["currentUser"] = currentUser;
 
-      res.cookie("test-cookie", "hello", {
-        sameSite: "none",
-        secure: true,
-        httpOnly: true,
-      });
+      // res.cookie("test-cookie", "hello", {
+      //   sameSite: "none",
+      //   secure: true,
+      //   httpOnly: true,
+      // });
 
       res.json(currentUser);
     } else {
@@ -88,8 +88,14 @@ const createUser = async (req, res) => {
   };
 
 const profile = async (req, res) => {
+    console.log("profile - sessionID:", req.sessionID);
+    console.log("profile - session data:", req.session);
+
     const currentUser = req.session["currentUser"];
     if (!currentUser) {
+
+      console.log("profile - no currentUser found");
+
       res.sendStatus(401);
       return;
     }
