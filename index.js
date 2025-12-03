@@ -9,6 +9,7 @@ import CourseRoutes from "./Kambaz/Courses/routes.js";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentsRoutes from './Kambaz/Assignments/routes.js';
 // import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
+import MongoStore from 'connect-mongo';
 
 import "dotenv/config";
 import session from "express-session";
@@ -29,6 +30,10 @@ const sessionOptions = {
   secret: process.env.SESSION_SECRET || "kambaz",
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: CONNECTION_STRING,
+    collectionName: 'sessions'
+  }),
 };
 
 if (process.env.NODE_ENV === "production" || process.env.SERVER_ENV === "production") {

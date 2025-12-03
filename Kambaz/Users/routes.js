@@ -88,6 +88,8 @@ const createUser = async (req, res) => {
   };
 
 const profile = async (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+
     console.log("profile - sessionID:", req.sessionID);
     console.log("profile - session data:", req.session);
 
