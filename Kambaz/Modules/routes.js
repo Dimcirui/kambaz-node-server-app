@@ -22,7 +22,7 @@ const deleteModule =  async (req, res) => {
 const updateModule = async (req, res) => {
     const { courseId, moduleId } = req.params;
     const moduleUpdates = req.body;
-    const status = await modulesDao.updateModule(courseId, moduleId, moduleUpdates);
+    const status = await dao.updateModule(courseId, moduleId, moduleUpdates);
     res.send(status);
   }
 
