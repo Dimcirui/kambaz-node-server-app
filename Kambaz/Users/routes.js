@@ -69,7 +69,19 @@ const createUser = async (req, res) => {
     const currentUser = await dao.findUserByCredentials(username, password);
     if (currentUser) {
       req.session["currentUser"] = currentUser;
-      res.json(currentUser);
+
+      console.log("✅ signin success, session ID:", req.sessionID);
+      console.log("✅ session data:", req.session);
+
+      req.session.save((err) => {
+        if (err) {
+          console.log("❌ session save error:", err);
+        } else {
+          console.log("✅ session saved successfully");
+        }
+
+        res.json(currentUser);
+      });
     } else {
       res.status(401).json({ message: "Unable to login. Try again later." });
     }
