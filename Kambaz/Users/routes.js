@@ -70,18 +70,13 @@ const createUser = async (req, res) => {
     if (currentUser) {
       req.session["currentUser"] = currentUser;
 
-      console.log("✅ signin success, session ID:", req.sessionID);
-      console.log("✅ session data:", req.session);
-
-      req.session.save((err) => {
-        if (err) {
-          console.log("❌ session save error:", err);
-        } else {
-          console.log("✅ session saved successfully");
-        }
-
-        res.json(currentUser);
+      res.cookie("test-cookie", "hello", {
+        sameSite: "none",
+        secure: true,
+        httpOnly: true,
       });
+
+      res.json(currentUser);
     } else {
       res.status(401).json({ message: "Unable to login. Try again later." });
     }
