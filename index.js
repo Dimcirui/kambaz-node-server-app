@@ -35,8 +35,7 @@ if (process.env.NODE_ENV === "production" || process.env.SERVER_ENV === "product
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
     sameSite: "none",
-    secure: false,
-    domain: process.env.SERVER_URL,
+    secure: true,
   } ;
 } else {
   console.log("Warning: No cross-site cookie settings detected. If deploying remotely, please check SERVER_ENV variable.");
