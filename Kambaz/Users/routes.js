@@ -135,16 +135,16 @@ const profile = async (req, res) => {
   };
 
 
-  app.post("/api/users", createUser);
-  app.get("/api/users", findAllUsers);
-  app.get("/api/users/:userId", findUserById);
-  app.put("/api/users/:userId", updateUser);
-  app.delete("/api/users/:userId", deleteUser);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
   app.get("/api/users/profile", profile);
+  app.post("/api/users", createUser);
+  app.get("/api/users", findAllUsers);
   app.get("/api/users/current/enrollments", findEnrollmentsForCurrentUser);
+  app.get("/api/users/:userId", findUserById);
+  app.put("/api/users/:userId", updateUser);
+  app.delete("/api/users/:userId", deleteUser);
   // app.get("/api/courses/:cid/people", findUsersInCourse);
   // app.post("/api/courses/:cid/people", enrollUserInCourse);
   // app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
