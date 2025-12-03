@@ -17,7 +17,7 @@ const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://1
 mongoose.connect(CONNECTION_STRING);
 const app = express();
 
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 
 app.use(
   cors({
@@ -30,13 +30,17 @@ const sessionOptions = {
   resave: false,
   saveUninitialized: false,
 };
+
 if (process.env.NODE_ENV === "production" || process.env.SERVER_ENV === "production") {
   console.log("Setting session cookie for production environment");
+
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
-  } ;
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24,
+  };
 } else {
   console.log("Warning: No cross-site cookie settings detected. If deploying remotely, please check SERVER_ENV variable.");
 }
