@@ -4,18 +4,20 @@ export default function QuizzesDao(db) {
     const findAllQuizzes = () => db.quizzes;
 
     const findQuizzesForCourse = async (courseId) => {
-        return db.quizzes().filter(quiz => quiz.course === courseId);
+        return db.quizzes.filter(quiz => quiz.course === courseId);
     };
 
     const createQuiz = async (quiz) => {
         const newQuiz = { _id: uuidv4(), ...quiz };
-        db.quizzes = [...db.quizzes, newQuiz];
+        db.quizzes.push(newQuiz);
         return newQuiz;
     }
 
     const updateQuiz = async (quizId, quizUpdates) => {
         const quiz = db.quizzes.find((q) => q._id === quizId);
-        Object.assign(quiz, quizUpdates);
+        if (quiz) {
+            Object.assign(quiz, quizUpdates);
+        }
         return quiz;
     }
 

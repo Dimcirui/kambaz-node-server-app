@@ -3,28 +3,28 @@ import QuizzesDao from './dao.js';
 export default function QuizzesRoutes(app, db) {
     const dao = QuizzesDao(db);
 
-    const findQuizzesForCourse = (req, res) => {
+    const findQuizzesForCourse = async (req, res) => {
         const { cid } = req.params;
-        const quizzes = dao.findQuizzesForCourse(cid);
+        const quizzes = await dao.findQuizzesForCourse(cid);
         res.json(quizzes);
     };
 
-    const createQuizForCourse = (req, res) => {
+    const createQuizForCourse = async (req, res) => {
         const { cid } = req.params;
         const quizData = { ...req.body, course: cid };
-        const newQuiz = dao.createQuiz(quizData);
+        const newQuiz = await dao.createQuiz(quizData);
         res.json(newQuiz);
     };
 
-    const updateQuiz = (req, res) => {
+    const updateQuiz = async (req, res) => {
         const { qid } = req.params;
-        const updatedQuiz = dao.updateQuiz(qid, req.body);
+        const updatedQuiz = await dao.updateQuiz(qid, req.body);
         res.json(updatedQuiz);
     };
 
-    const deleteQuiz = (req, res) => {
+    const deleteQuiz = async (req, res) => {
         const { qid } = req.params;
-        dao.deleteQuiz(qid);
+        await dao.deleteQuiz(qid);
         res.sendStatus(200);
     };
 
