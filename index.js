@@ -56,7 +56,7 @@ UserRoutes(app, db);
 CourseRoutes(app, db);
 ModuleRoutes(app, db);
 AssignmentsRoutes(app, db);
-EnrollmentsRoutes(app, db);
+// EnrollmentsRoutes(app, db);
 QuizzesRoutes(app, db);
 Lab5(app);
 Hello(app);
