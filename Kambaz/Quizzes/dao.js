@@ -7,6 +7,10 @@ export default function QuizzesDao(db) {
         return db.quizzes.filter(quiz => quiz.course === courseId);
     };
 
+    const findQuizById = async (quizId) => {
+        return db.quizzes.find((q) => q._id === quizId);
+    };
+
     const createQuiz = async (quiz) => {
         const newQuiz = { _id: uuidv4(), ...quiz };
         db.quizzes.push(newQuiz);
@@ -29,6 +33,7 @@ export default function QuizzesDao(db) {
     return {
         findAllQuizzes,
         findQuizzesForCourse,
+        findQuizById,
         createQuiz,
         updateQuiz,
         deleteQuiz
