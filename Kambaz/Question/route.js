@@ -1,4 +1,4 @@
-import QuestionDao from "./dao";
+import QuestionDao from "./dao.js";
 
 export default function QuestionRoutes(app) {
     const dao = QuestionDao();
@@ -7,6 +7,12 @@ export default function QuestionRoutes(app) {
         const { qid } = req.params;
         const questions = await dao.findQuestionsForQuiz(qid);
         res.json(questions);
+    };
+
+    const findQuestionById = async (req, res) => {
+        const { questionId } = req.params;
+        const question = await dao.findQuestionById(questionId);
+        res.json(question);
     };
 
     const createQuestion = async (req, res) => {
@@ -28,6 +34,7 @@ export default function QuestionRoutes(app) {
     };
 
     app.get('/api/quizzes/:qid/questions', findQuestionsForQuiz);
+    app.get('/api/questions/:questionId', findQuestionById);
     app.post('/api/quizzes/:qid/questions', createQuestion);
     app.put('/api/questions/:questionId', updateQuestion);
     app.delete('/api/questions/:questionId', deleteQuestion);

@@ -22,6 +22,13 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+// For a6 and final project deployments, allow CORS from multiple origins
+const allowedOrigins = [
+  "http://localhost:3000",
+  process.env.CLIENT_URL,
+  process.env.CLIENT_URL2,
+].filter(Boolean);
+
 app.use(
   cors({
     credentials: true,
