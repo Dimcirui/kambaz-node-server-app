@@ -11,6 +11,7 @@ import AssignmentsRoutes from './Kambaz/Assignments/routes.js';
 // import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
 import MongoStore from 'connect-mongo';
 import QuizzesRoutes from './Kambaz/Quizzes/route.js';
+import QuestionRoutes from './Kambaz/Question/route.js'
 
 import "dotenv/config";
 import session from "express-session";
@@ -58,6 +59,7 @@ ModuleRoutes(app, db);
 AssignmentsRoutes(app, db);
 // EnrollmentsRoutes(app, db);
 QuizzesRoutes(app, db);
+QuestionRoutes(app, db);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
