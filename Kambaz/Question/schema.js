@@ -12,7 +12,7 @@ const schema = new mongoose.Schema(
         default: "MULTIPLE_CHOICE"
     },
     choices: [{ text: String, isCorrect: Boolean }],
-    correctAnswer: { type: String, default: "" }
+    correctAnswer: [{ type: String, default: "" }]
   }
 );
 export default schema;

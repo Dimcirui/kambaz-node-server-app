@@ -20,8 +20,8 @@ export default function QuestionDao() {
     };
 
     const updateQuestion = async (questionId, questionUpdates) => {
-        model.updateOne({ _id: questionId }, { $set: questionUpdates });
-        return model.findById(questionId);
+        const { _id, ...updates } = questionUpdates;
+        return model.updateOne({ _id: questionId }, { $set: updates });
     }
 
     const deleteQuestion = async (questionId) => {
