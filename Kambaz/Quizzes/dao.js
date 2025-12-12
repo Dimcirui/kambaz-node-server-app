@@ -1,33 +1,32 @@
+import model from './model.js';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function QuizzesDao(db) {
-    const findAllQuizzes = () => db.quizzes;
+export default function QuizzesDao() {
+
+    const findAllQuizzes = async () => {
+        return model.find();
+    }
 
     const findQuizzesForCourse = async (courseId) => {
-        return db.quizzes.filter(quiz => quiz.course === courseId);
+        return model.find({ course: courseId });
     };
 
     const findQuizById = async (quizId) => {
-        return db.quizzes.find((q) => q._id === quizId);
+        return model.findById(quizId);
     };
 
     const createQuiz = async (quiz) => {
-        const newQuiz = { _id: uuidv4(), ...quiz };
-        db.quizzes.push(newQuiz);
-        return newQuiz;
+        const newQuiz = { _id: quiz._id || uuidv4(), ...quiz };
+        return model.create(newQuiz);
     }
 
     const updateQuiz = async (quizId, quizUpdates) => {
-        const quiz = db.quizzes.find((q) => q._id === quizId);
-        if (quiz) {
-            Object.assign(quiz, quizUpdates);
-        }
-        return quiz;
+        const { _id, ...updates } = quizUpdates;
+        return model.updateOne({ _id: quizId }, { $set: updates });
     }
 
     const deleteQuiz = async (quizId) => {
-        db.quizzes = db.quizzes.filter((quiz) => quiz._id !== quizId);
-        return quizId;
+        return model.deleteOne({ _id: quizId });
     }
 
     return {
