@@ -16,7 +16,7 @@ export default function QuizzesDao() {
     };
 
     const createQuiz = async (quiz) => {
-        const newQuiz = { _id: quiz._id || uuidv4(), ...quiz };
+        const newQuiz = { ...quiz, _id: uuidv4() };
         return model.create(newQuiz);
     }
 

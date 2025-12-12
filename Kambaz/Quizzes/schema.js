@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 const quizSchema = new mongoose.Schema(
   {
+    _id: String,
     title: { type: String, required: true },
     course: { type: String, required: true },
     points: Number,
