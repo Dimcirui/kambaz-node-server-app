@@ -1,7 +1,7 @@
 import QuizzesDao from './dao.js';
 
-export default function QuizzesRoutes(app, db) {
-    const dao = QuizzesDao(db);
+export default function QuizzesRoutes(app) {
+    const dao = QuizzesDao();
 
     const findQuizzesForCourse = async (req, res) => {
         const { cid } = req.params;
