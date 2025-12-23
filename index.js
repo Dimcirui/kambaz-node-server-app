@@ -1,4 +1,5 @@
 import express from 'express'
+import mongoose from 'mongoose'
 import Hello from './Hello.js'
 import Lab5 from './Lab5/index.js'
 import cors from 'cors'
@@ -7,12 +8,21 @@ import UserRoutes from "./Kambaz/Users/routes.js";
 import CourseRoutes from "./Kambaz/Courses/routes.js";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentsRoutes from './Kambaz/Assignments/routes.js';
-import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
+// import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
+import MongoStore from 'connect-mongo';
+import QuizzesRoutes from './Kambaz/Quizzes/route.js';
+import QuestionRoutes from './Kambaz/Question/route.js'
 
 import "dotenv/config";
 import session from "express-session";
+import PazzaRoutes from './Kambaz/Pazza/route.js'
 
+const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
+mongoose.connect(CONNECTION_STRING);
 const app = express();
+
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     credentials: true,
@@ -23,14 +33,24 @@ const sessionOptions = {
   secret: process.env.SESSION_SECRET || "kambaz",
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: CONNECTION_STRING,
+    collectionName: 'sessions'
+  }),
 };
-if (process.env.SERVER_ENV !== "development") {
+
+if (process.env.NODE_ENV === "production" || process.env.SERVER_ENV === "production") {
+  console.log("Setting session cookie for production environment");
+
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
-    domain: process.env.SERVER_URL,
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24,
   };
+} else {
+  console.log("Warning: No cross-site cookie settings detected. If deploying remotely, please check SERVER_ENV variable.");
 }
 app.use(session(sessionOptions));
 app.use(express.json());
@@ -38,7 +58,10 @@ UserRoutes(app, db);
 CourseRoutes(app, db);
 ModuleRoutes(app, db);
 AssignmentsRoutes(app, db);
-EnrollmentsRoutes(app, db);
+// EnrollmentsRoutes(app, db);
+QuizzesRoutes(app, db);
+QuestionRoutes(app, db);
+PazzaRoutes(app, db);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
