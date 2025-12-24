@@ -1,4 +1,5 @@
 import model from "./model.js";
+import folderModel from "./folderModel.js";
 
 export default function PazzaDao() {
 
@@ -18,11 +19,28 @@ export default function PazzaDao() {
     const deletePost = async (postId) => {
         return model.deleteOne({ _id: postId });
     }
+    const findFoldersForCourse = async (courseId) => {
+        return folderModel.find({ course: courseId });
+    }
+    const createFolder = async (folder) => {
+        delete folder._id;
+        return folderModel.create(folder);
+    }
+    const updateFolder = async (folderId, name) => {
+        return folderModel.updateOne({ _id: folderId }, { $set: { name } });
+    }
+    const deleteFolder = async (folderId) => {
+        return folderModel.deleteOne({ _id: folderId });
+    }
     return {
         createPost,
         findPostsForCourse,
         findPostById,
         updatePost,
-        deletePost
+        deletePost,
+        findFoldersForCourse,
+        createFolder,
+        updateFolder,
+        deleteFolder
     };
 }

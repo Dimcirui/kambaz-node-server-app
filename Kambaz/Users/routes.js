@@ -90,7 +90,7 @@ const createUser = async (req, res) => {
     res.sendStatus(200);
   };
 
-const profile = async (req, res) => {
+  const profile = async (req, res) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
 
     console.log("profile - sessionID:", req.sessionID);
@@ -106,26 +106,6 @@ const profile = async (req, res) => {
     }
     res.json(currentUser);
   };
-
-  
-  // const findUsersInCourse = async (req, res) => {
-  //   const { cid } = req.params;
-  //   const users = await enrollmentsDao.findUsersEnrolledInCourse(cid);
-  //   res.json(users);
-  // };
-
-  // const enrollUserInCourse = async (req, res) => {
-  //   const { cid } = req.params;
-  //   const { userId } = req.body;
-  //   await enrollmentsDao.enrollUserInCourse(userId, cid);
-  //   res.sendStatus(201);
-  // };
-
-  // const unenrollUserFromCourse = async (req, res) => {
-  //   const { cid, uid }  = req.params;
-  //   await enrollmentsDao.unenrollUserFromCourse( uid, cid);
-  //   res.sendStatus(200);
-  // };
 
   const findEnrollmentsForCurrentUser = async (req, res) => {
     const currentUser = req.session["currentUser"];
@@ -148,7 +128,4 @@ const profile = async (req, res) => {
   app.get("/api/users/:userId", findUserById);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
-  // app.get("/api/courses/:cid/people", findUsersInCourse);
-  // app.post("/api/courses/:cid/people", enrollUserInCourse);
-  // app.delete("/api/courses/:cid/people/:uid", unenrollUserFromCourse);
 }
