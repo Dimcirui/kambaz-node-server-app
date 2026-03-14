@@ -8,14 +8,16 @@ import UserRoutes from "./Kambaz/Users/routes.js";
 import CourseRoutes from "./Kambaz/Courses/routes.js";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentsRoutes from './Kambaz/Assignments/routes.js';
-// import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
-import MongoStore from 'connect-mongo';
 import QuizzesRoutes from './Kambaz/Quizzes/route.js';
-import QuestionRoutes from './Kambaz/Question/route.js'
+import QuestionRoutes from './Kambaz/Question/route.js';
+import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
+import GradesRoutes from './Kambaz/Grades/routes.js';
+import MongoStore from 'connect-mongo';
 
 import "dotenv/config";
 import session from "express-session";
-import PazzaRoutes from './Kambaz/Pazza/route.js'
+import PazzaRoutes from './Kambaz/Pazza/route.js';
+import PeopleRoutes from './Kambaz/People/routes.js';
 
 const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
@@ -58,10 +60,12 @@ UserRoutes(app, db);
 CourseRoutes(app, db);
 ModuleRoutes(app, db);
 AssignmentsRoutes(app, db);
-// EnrollmentsRoutes(app, db);
+EnrollmentsRoutes(app, db);
 QuizzesRoutes(app, db);
 QuestionRoutes(app, db);
+GradesRoutes(app, db);
 PazzaRoutes(app, db);
+PeopleRoutes(app, db);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
