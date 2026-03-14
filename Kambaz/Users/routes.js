@@ -118,6 +118,7 @@ const createUser = async (req, res) => {
   };
 
 
+  app.get("/api/users/current/enrollments", findEnrollmentsForCurrentUser);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
