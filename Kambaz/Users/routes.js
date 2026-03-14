@@ -118,13 +118,13 @@ const createUser = async (req, res) => {
   };
 
 
+  app.get("/api/users/current/enrollments", findEnrollmentsForCurrentUser);
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signout", signout);
   app.get("/api/users/profile", profile);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
-  app.get("/api/users/current/enrollments", findEnrollmentsForCurrentUser);
   app.get("/api/users/:userId", findUserById);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
